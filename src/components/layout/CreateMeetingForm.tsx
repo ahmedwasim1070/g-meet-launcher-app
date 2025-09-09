@@ -16,7 +16,7 @@ function CreateMeetingForm() {
             {/*  */}
             <p className="text-gray-500">Create meeting with one click, join and share instantly.</p>
             {/*  */}
-            <button type="submit" className="text-white bg-blue-500 border-2 border-blue-500 px-5 py-1.5 rounded-lg cursor-pointer hover:bg-transparent hover:text-blue-500 transition-colors">
+            <button type="submit" className="text-white bg-blue-600 border-2 border-blue-600 px-5 py-1.5 rounded-lg cursor-pointer hover:bg-transparent hover:text-blue-600 transition-colors">
                 New Meeting
             </button>
         </form>

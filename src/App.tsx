@@ -1,5 +1,6 @@
 // Imports
 import { useState } from "react";
+import { Toaster } from "react-hot-toast";
 // Stylesheets
 import "./styles/index.css";
 // Components
@@ -19,7 +20,7 @@ function App() {
   return (
     <section className="relative">
       {/* Payment Pop */}
-      <PaymentPop />
+      <Toaster />
 
       {/*  */}
       <Header isExpnadedNav={isExpnadedNav} setIsExpandedNav={setIsExpandedNav} />

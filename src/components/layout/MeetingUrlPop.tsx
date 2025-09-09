@@ -33,7 +33,7 @@ function MeetingUrlPop({ clipMeetingUrl, setClipMeetingUrl, setIsMeetingPop }: M
     return (
         <section
             onClick={() => setIsMeetingPop(false)}
-            className="inset-0 fixed z-50 min-w-screen h-full bg-gray-900/30 flex justify-center items-center"
+            className="inset-0 fixed z-40 min-w-screen h-full bg-gray-900/30 flex justify-center items-center"
         >
             {/*  */}
             <div className="bg-white shadow-sm rounded-lg w-1/4 flex flex-col items-center p-3 text-center">

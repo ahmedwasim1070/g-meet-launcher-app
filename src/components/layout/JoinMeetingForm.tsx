@@ -58,11 +58,11 @@ function JoinMeetingForm() {
                 onChange={handleInput}
                 value={meetingLink}
                 type="text"
-                className={`bg-gray-200 w-full border-2 rounded-lg p-2 outline-none  ${isMeetingLinkError ? 'border-red-500 placeholder:text-red-400 ' : 'border-gray-400 focus:border-blue-500'}`}
+                className={`bg-gray-200 w-full border-2 rounded-lg p-2 outline-none  ${isMeetingLinkError ? 'border-red-500 placeholder:text-red-400 ' : 'border-gray-400 focus:border-blue-600'}`}
                 placeholder={`${isMeetingLinkError ? 'Google Meet Url or Code is required.' : '📎Paste your Meeting url or code.'}`}
             />
             {/*  */}
-            <button type="submit" className="text-white bg-blue-500 border-2 border-blue-500 px-5 py-1.5 rounded-lg cursor-pointer hover:bg-transparent hover:text-blue-500 transition-colors" >
+            <button type="submit" className="text-white bg-blue-600 border-2 border-blue-600 px-5 py-1.5 rounded-lg cursor-pointer hover:bg-transparent hover:text-blue-600 transition-colors" >
                 Join Now
             </button >
         </form >

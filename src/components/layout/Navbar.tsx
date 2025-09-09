@@ -14,10 +14,10 @@ function Navbar({ isExpnadedNav, selectedTab, setSelectedTab }: NavbarProps) {
     const navItems = [
         { icon: <HomeIcon size={20} />, label: "Home", value: "home" },
         { icon: <Image size={20} />, label: "Background", value: "background" },
-        { icon: <Phone size={20} />, label: "Contact Us", value: "contact-us" },
-        { icon: <Star size={20} />, label: "Rate Us", value: "rate-us" },
         { icon: <Shield size={20} />, label: "Privacy Policy", value: "privacy-policy" },
         { icon: <FileText size={20} />, label: "Terms of Service", value: "terms-of-service" },
+        { icon: <Phone size={20} />, label: "Contact Us", value: "contact-us" },
+        { icon: <Star size={20} />, label: "Rate Us", value: "rate-us" },
     ];
 
     // Handle click
