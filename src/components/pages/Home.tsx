@@ -1,23 +1,31 @@
 // Imports
 import { useCallback, useEffect, useState } from "react";
 import { Edit } from "lucide-react";
+import { sendNotification } from "@tauri-apps/plugin-notification";
 // Types
 import { ScheduleMeeting } from "../../types";
 // Hooks
 import useClipboarGmeetWatcher from "../../hooks/useClipboardGmeetWatcher";
 // Component
-import JoinMeetingForm from "./JoinMeetingForm";
-import CreateMeetingForm from "./CreateMeetingForm";
-import MeetingUrlPop from "./MeetingUrlPop";
-import ScheduleMetetingBox from "./ScheduleMetetingBox";
-import ScheduleMetetingPop from "./ScheduleMeetingPop";
-import ScheduleNotficationPop from "./ScheduleNotficationPop";
+import JoinMeetingForm from "../layout/JoinMeetingForm";
+import CreateMeetingForm from "../layout/CreateMeetingForm";
+import MeetingUrlPop from "../layout/MeetingUrlPop";
+import ScheduleMetetingBox from "../layout/ScheduleMetetingBox";
+import ScheduleMetetingPop from "../layout/ScheduleMeetingPop";
+import ScheduleNotficationPop from "../layout/ScheduleNotficationPop";
+
+// Interfaces
+interface HomeProps {
+    notificationPermission: boolean | null;
+}
 
 // 
-function Home() {
+function Home({ notificationPermission }: HomeProps) {
     // States
     // User Name 
-    const [userName, setUserName] = useState<string>("User");
+    const [userName, setUserName] = useState<string>(() => {
+        return localStorage.getItem("userName") || 'User'
+    });
     // Is Edit Bar 
     const [isEditName, setIsEditName] = useState<boolean>(false);
     // Machine readable time
@@ -38,9 +46,20 @@ function Home() {
     // Schedule Meeting pop
     const [isScheduleMeetingPop, setIsScheduleMeetingPop] = useState<boolean>(false);
     // Scheduled Meetings
-    const [scheduledMeetings, setScheduledMeetings] = useState<ScheduleMeeting[]>([]);
+    const [scheduledMeetings, setScheduledMeetings] = useState<ScheduleMeeting[]>(() => {
+        const stored = localStorage.getItem("scheduledMeetings");
+        const meetings: ScheduleMeeting[] = stored ? JSON.parse(stored) : [];
+        if (meetings.length > 0) {
+            const cleanedInvalidMeetings = meetings.filter((meeting) => meeting.date > Date.now());
+            return cleanedInvalidMeetings;
+        } else {
+            return meetings;
+        }
+    });
     // Next Notification
     const [scheduleNotification, setScheduleNotification] = useState<ScheduleMeeting | null>(null);
+    // Notify Pop
+    const [isScheduleNotifyPop, setIsScheduleNotifyPop] = useState<boolean>(false);
 
     // clipboardWatcher Hook that looks for google meet urls 
     const handleClipboard = useCallback((text: URL) => {
@@ -66,24 +85,47 @@ function Home() {
                 day: "numeric",
             });
 
-            if (scheduledMeetings.length > 0) {
-                const nextMeeting = scheduledMeetings[0];
-                if (Math.abs(nextMeeting.date - now) <= 5000) {
-                    setScheduleNotification(nextMeeting);
-                }
-            }
-
             setFormattedDate((prev) => (prev !== newFormattedDate ? newFormattedDate : prev));
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [scheduledMeetings]);
+    }, []);
+    // Check for schedule reminder
+    useEffect(() => {
+        if (scheduleNotification && Math.abs(scheduleNotification.date - currentTime.getTime()) < 1000) {
+            setIsScheduleNotifyPop(true);
+
+            if (notificationPermission === true) {
+                sendNotification({
+                    title: "Meeting Reminder",
+                    body: `You have a Scheduled Meeting`,
+                })
+            }
+        }
+
+        if (!scheduleNotification && scheduledMeetings.length > 0) {
+            const sorted = [...scheduledMeetings].sort((a, b) => a.date - b.date);
+            setScheduleNotification(sorted[0]);
+        }
+    }, [currentTime, scheduledMeetings, scheduleNotification])
+    // Saves to local storage
+    useEffect(() => {
+        if (userName !== 'User') {
+            localStorage.setItem('userName', userName);
+        }
+    }, [userName])
+    // ScheduleMeeting
+    useEffect(() => {
+        if (scheduledMeetings) {
+            localStorage.setItem('scheduleMeetings', JSON.stringify(scheduledMeetings));
+        }
+    }, [scheduledMeetings])
 
     return (
         <section className="min-w-full p-4 space-y-5">
             {/* Popups */}
             {/* Schedule Notification Pop */}
-            {scheduleNotification && <ScheduleNotficationPop scheduleNotification={scheduleNotification} setScheduleNotification={setScheduleNotification} setScheduledMeetings={setScheduledMeetings} />}
+            {isScheduleNotifyPop && scheduleNotification && <ScheduleNotficationPop setIsScheduleNotifyPop={setIsScheduleNotifyPop} scheduleNotification={scheduleNotification} setScheduleNotification={setScheduleNotification} setScheduledMeetings={setScheduledMeetings} />}
             {/* Meeting Url */}
             {isMeetingPop && <MeetingUrlPop clipMeetingUrl={clipMeetingUrl} setClipMeetingUrl={setClipMeetingUrl} setIsMeetingPop={setIsMeetingPop} />}
             {/* Schedule Meeting */}
