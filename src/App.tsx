@@ -23,6 +23,8 @@ function App() {
   const [isExpnadedNav, setIsExpandedNav] = useState<boolean>(false);
   // Selected Tab
   const [selectedTab, setSelectedTab] = useState<string>("home");
+  // Payment Option Pop State
+  const [isPaymentPop, setIsPaymentPop] = useState<boolean>(true);
 
   // Effect
   // Check for notification permission
@@ -31,7 +33,6 @@ function App() {
       if (notificationPermission === null) {
         const ask = await requestPermission();
         setNotificationPermission(ask === 'granted');
-        console.log(ask);
       }
     }
 
@@ -46,8 +47,10 @@ function App() {
 
   return (
     <section className="relative">
-      {/* Payment Pop */}
       <Toaster />
+
+      {/* Payment Pop */}
+      {isPaymentPop && <PaymentPop setIsPaymentPop={setIsPaymentPop} />}
 
       {/*  */}
       <Header isExpnadedNav={isExpnadedNav} setIsExpandedNav={setIsExpandedNav} />

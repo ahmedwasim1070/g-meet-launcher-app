@@ -1,9 +1,14 @@
 // Imports
-import { useState } from "react"
+import React, { useState } from "react"
 import { CalendarDays, Headset, ShieldCheck, Wallpaper, X } from "lucide-react"
 
+// Interface
+interface Props {
+    setIsPaymentPop: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 // 
-function PaymentPop() {
+function PaymentPop({ setIsPaymentPop }: Props) {
     // States
     // Selected Plan
     const [selectedPlan, setSelectedPlan] = useState<number>(0);
@@ -34,8 +39,6 @@ function PaymentPop() {
             planCode: 'anual',
             slogen: 'Onece In a Year',
             price: '5.00 $',
-            btnPrimaryContent: 'Pay 5.00$',
-            btnSecondaryContent: 'for a year'
 
         },
         {
@@ -44,8 +47,6 @@ function PaymentPop() {
             planCode: 'lifeTime',
             slogen: 'One Time Only',
             price: '20.00 $',
-            btnPrimaryContent: 'Pay 20.00$',
-            btnSecondaryContent: 'once in your life'
         },
     ]
     // Support Link
@@ -76,9 +77,9 @@ function PaymentPop() {
     return (
         <section className="min-w-screen min-h-screen bg-gray-900/40 backdrop-blur-sm fixed z-50 inset-0 flex items-center justify-center">
             {/*  */}
-            <div className="bg-white max-h-[95%] rounded-lg relative overflow-y-scroll ">
+            <div className="bg-white max-h-[98%] rounded-lg relative overflow-y-scroll">
                 {/* Cross btn */}
-                <button className="p-2 bg-gray-200 rounded-full absolute right-3 top-3 cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-colors">
+                <button onClick={() => setIsPaymentPop(false)} className="p-2 bg-gray-200 rounded-full absolute right-3 top-3 cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-colors">
                     <X className="w-6 h-6 text-gray-500" />
                 </button>
 
@@ -133,9 +134,8 @@ function PaymentPop() {
                     </div>
 
                     {/* Submit */}
-                    <button className="bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white w-full py-2.5 rounded-lg text-lg font-semibold cursor-pointer">
-                        <p>{plans[selectedPlan].btnPrimaryContent}</p>
-                        <p className="text-sm">{plans[selectedPlan].btnSecondaryContent}</p>
+                    <button className="bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white w-full py-3 rounded-lg text-lg font-semibold cursor-pointer">
+                        <p>Continue</p>
                     </button>
 
                     {/*  */}
@@ -144,7 +144,9 @@ function PaymentPop() {
                     {/*  */}
                     <ul className="flex flex-row items-center gap-x-2">
                         {navItems.map((nav, idx) => (
-                            <li key={idx} className="text-sm text-gray-600 cursor-pointer">{nav.label}</li>
+                            <li key={idx} className="text-sm text-gray-600 cursor-pointer group">
+                                <a className="group-hover:underline" href="">{nav.label}</a>
+                            </li>
                         ))}
                     </ul>
 
